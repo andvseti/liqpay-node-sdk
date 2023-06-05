@@ -1,0 +1,16 @@
+{
+  "root": true,
+  "extends": [
+    "standard",
+    "plugin:jest/recommended"
+  ],
+  "plugins": [
+    "jest"
+  ],
+  "rules": {
+    "semi": [
+      "error",
+      "always"
+    ]
+  }
+}

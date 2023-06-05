@@ -1,0 +1,137 @@
+{
+    "type": "object",
+    "required": ["version", "public_key", "action", "amount", "currency", "description", "order_id"],
+    "properties": {
+      "version": {
+        "type": "integer"
+      },
+      "public_key": {
+        "type": "string"
+      },
+      "action": {
+        "type": "string",
+        "enum": ["pay", "hold", "subscribe", "paydonate"]
+      },
+      "amount": { "type": "number" },
+      "currency": {
+        "type": "string",
+        "enum": ["USD", "EUR", "UAH"]
+      },
+      "description": { "type": "string" },
+      "order_id": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255
+      },
+      "rro_info": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["amount", "cost", "id", "price"],
+              "properties": {
+                "amount": { "type": "number" },
+                "cost": { "type": "number" },
+                "id": { "type": "number" },
+                "price": { "type": "number" }
+              }
+            }
+          }
+        }
+      },
+      "expired_date": {
+        "type": "string",
+        "pattern": "/^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$/"
+      },
+      "language": {
+        "type": "string",
+        "enum": ["uk", "ru", "en"]
+      },
+      "paytypes": {
+        "type": "string",
+        "enum": ["apay", "gpay", "card", "liqpay", "privat24", "moment_part", "paypart", "cash", "invoice", "qr"]
+      },
+      "result_url": {
+        "type": "string",
+        "maxLength": 510
+      },
+      "server_url": {
+        "type": "string",
+        "maxLength": 510
+      },
+      "verifycode": {
+        "type": "string"
+      },
+      "split_rules": {
+        "type": "string"
+      },
+      "sender_address": {
+        "type": "string"
+      },
+      "sender_city": {
+        "type": "string"
+      },
+      "sender_country_code": {
+        "type": "string"
+      },
+      "sender_first_name": {
+        "type": "string"
+      },
+      "sender_last_name": {
+        "type": "string"
+      },
+      "sender_postal_code": {
+        "type": "string"
+      },
+      "letter_of_credit": {
+        "type": "string"
+      },
+      "letter_of_credit_date": {
+        "type": "string"
+      },
+      "subscribe": {
+        "type": "string"
+      },
+      "subscribe_date_start": {
+        "type": "string",
+        "pattern": "/^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$/"
+      },
+      "subscribe_periodicity": {
+        "type": "string",
+        "enum": ["month", "year"]
+      },
+      "customer": {
+        "type": "string"
+      },
+      "recurringbytoken": {
+        "type": "string"
+      },
+      "customer_user_id": {
+        "type": "string"
+      },
+      "dae": {
+        "type": "string"
+      },
+      "info": {
+        "type": "string"
+      },
+      "product_category": {
+        "type": "string",
+        "maxLength": 25
+      },
+      "product_description": {
+        "type": "string",
+        "maxLength": 500 
+      },
+      "product_name": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "product_url": {
+        "type": "string",
+        "maxLength": 2000
+      }
+    }
+  }
