@@ -1,6 +1,7 @@
 const Ajv = require('ajv');
 const fs = require('node:fs');
 const path = require('path');
+const LiqPayError = require('./LiqPayError');
 
 class LiqPayDataPreparer {
   #possibleСurrencies;
@@ -38,7 +39,7 @@ class LiqPayDataPreparer {
     const valid = validate(data);
 
     if (!valid) {
-      throw validate.errors;
+      throw new LiqPayError(validate.errors.message, validate.errors, 'LiqPayDataPreparer.validate');
     }
 
     return true;
@@ -64,7 +65,7 @@ class LiqPayDataPreparer {
     const value = this.#possibleСurrencies.find((value) => value === currencyUpper);
 
     if (!value) {
-      throw new Error(`Invalid currency value: ${currency}. valid values: ${this.#possibleСurrencies.join(', ')}`);
+      throw new LiqPayError('Invalid currency value', { currency, validСurrencies: this.#possibleСurrencies }, 'LiqPayDataPreparer.currency');
     }
 
     return value;
@@ -79,7 +80,7 @@ class LiqPayDataPreparer {
 
     const value = this.#possibleLanguages.find((value) => value === languageLower);
     if (!value) {
-      throw new Error(`Invalid language value: ${language}. valid values: ${this.#possibleLanguages.join(', ')}`);
+      throw new LiqPayError('Invalid language value', { language, validСurrencies: this.#possibleLanguages }, 'LiqPayDataPreparer.language');
     }
 
     return value;
@@ -88,7 +89,7 @@ class LiqPayDataPreparer {
   version (version = 3) {
     const numberVersion = Number(version);
     if (isNaN(numberVersion)) {
-      throw new Error(`Invalid version value: ${version}. It should be a number.`);
+      throw new LiqPayError('Invalid version value, must be a number greater than zero', { version }, 'LiqPayDataPreparer.version');
     }
     return numberVersion || 3;
   }
