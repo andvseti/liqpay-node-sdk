@@ -1,5 +1,5 @@
 /* eslint-disable no-new */
-const LiqPayAPI = require('../classes/LiqPayAPI');
+const { API } = require('../index.js');
 
 describe('LiqPayAPI', () => {
   let liqPay;
@@ -20,7 +20,7 @@ describe('LiqPayAPI', () => {
   };
 
   beforeEach(() => {
-    liqPay = new LiqPayAPI({ publicKey, privateKey });
+    liqPay = new API({ publicKey, privateKey });
 
     global.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve({ result: 'success' }),

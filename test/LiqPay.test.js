@@ -1,4 +1,4 @@
-const LiqPay = require('../classes/LiqPay');
+const { LiqPay } = require('../index');
 
 describe('LiqPay', () => {
   let liqPay;

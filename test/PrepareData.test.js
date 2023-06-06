@@ -1,65 +1,65 @@
-const PrepareData = require('../classes/LiqPayDataPreparer');
+const { DataPreparer } = require('../index');
 const fs = require('node:fs');
 const Ajv = require('ajv');
 
-describe('PrepareData', () => {
-  let prepareData;
+describe('dataPreparer', () => {
+  let dataPreparer;
 
   beforeEach(() => {
-    prepareData = new PrepareData();
+    dataPreparer = new DataPreparer();
   });
 
   test('should throw an error when invalid currency is provided', () => {
     expect(() => {
-      prepareData.currency('INVALID_CURRENCY');
-    }).toThrow('Invalid currency value: INVALID_CURRENCY. valid values: UAH, USD, EUR');
+      dataPreparer.currency('INVALID_CURRENCY');
+    }).toThrow('Invalid currency value');
   });
 
   test('should return default currency when no currency is provided', () => {
-    expect(prepareData.currency()).toBe('UAH');
+    expect(dataPreparer.currency()).toBe('UAH');
   });
 
   test('should throw an error when invalid language is provided', () => {
     expect(() => {
-      prepareData.language('INVALID_LANGUAGE');
-    }).toThrow('Invalid language value: INVALID_LANGUAGE. valid values: uk, en, ru');
+      dataPreparer.language('INVALID_LANGUAGE');
+    }).toThrow('Invalid language value');
   });
 
   test('should return default language when no language is provided', () => {
-    expect(prepareData.language()).toBe('uk');
+    expect(dataPreparer.language()).toBe('uk');
   });
 
   test('should return default version when no version is provided', () => {
-    expect(prepareData.version()).toEqual(3);
+    expect(dataPreparer.version()).toEqual(3);
   });
 
   test('should throw an error when invalid version is provided', () => {
     expect(() => {
-      prepareData.version('INVALID_VERSION');
-    }).toThrow('Invalid version value: INVALID_VERSION. It should be a number.');
+      dataPreparer.version('INVALID_VERSION');
+    }).toThrow('Invalid version value, must be a number greater than zero');
   });
 
   test('should load schemas from provided directory', async () => {
     const mockReadDir = jest.spyOn(fs, 'readdirSync').mockReturnValue(['schema1.json', 'schema2.json']);
     const mockReadFile = jest.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify({ test: 'test' }));
 
-    prepareData.schemaLoader();
+    dataPreparer.schemaLoader();
 
-    expect(prepareData.schemasJSON.schema1).toEqual({ test: 'test' });
-    expect(prepareData.schemasJSON.schema2).toEqual({ test: 'test' });
+    expect(dataPreparer.schemasJSON.schema1).toEqual({ test: 'test' });
+    expect(dataPreparer.schemasJSON.schema2).toEqual({ test: 'test' });
 
     mockReadDir.mockRestore();
     mockReadFile.mockRestore();
   });
 
-  test('should compile all schemas in the ./schemas directory', async () => {
-    const prepareData = new PrepareData();
-    await prepareData.schemaLoader();
+  test('should compile all schemas in the ./schemas directory', () => {
+    const dataPreparer = new DataPreparer();
+    dataPreparer.schemaLoader();
 
     const ajv = new Ajv();
 
-    for (const schemaName in prepareData.schemasJSON) {
-      const schema = prepareData.schemasJSON[schemaName];
+    for (const schemaName in dataPreparer.schemasJSON) {
+      const schema = dataPreparer.schemasJSON[schemaName];
       const isValid = ajv.validateSchema(schema);
 
       if (!isValid) {
