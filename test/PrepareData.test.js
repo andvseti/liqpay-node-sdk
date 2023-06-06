@@ -1,4 +1,4 @@
-const PrepareData = require('../PrepareData');
+const PrepareData = require('../classes/LiqPayDataPreparer');
 const fs = require('node:fs');
 const Ajv = require('ajv');
 

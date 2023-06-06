@@ -2,7 +2,7 @@ const Ajv = require('ajv');
 const fs = require('node:fs');
 const path = require('path');
 
-class PrepareData {
+class LiqPayDataPreparer {
   #possibleСurrencies;
   #possibleLanguages;
   #compileSchema;
@@ -12,7 +12,7 @@ class PrepareData {
     this.#possibleLanguages = ['uk', 'en', 'ru'];
     this.#compileSchema = {};
 
-    this.schemasDir = options.schemaDir || path.join(__dirname, 'schemas');
+    this.schemasDir = options.schemaDir || path.join(__dirname, '..', 'schemas');
     this.schemasJSON = options.schemaJSON || {};
 
     this.ajv = new Ajv();
@@ -94,4 +94,4 @@ class PrepareData {
   }
 }
 
-module.exports = PrepareData;
+module.exports = LiqPayDataPreparer;
