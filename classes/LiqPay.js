@@ -1,5 +1,6 @@
 const LiqPayAPI = require('./LiqPayAPI');
 const LiqPayDataPreparer = require('./LiqPayDataPreparer');
+const payStatus = require('./paymentStatusesMap');
 
 class LiqPay {
   constructor (options = {}) {
@@ -11,7 +12,7 @@ class LiqPay {
     this.api = new LiqPayAPI({ publicKey, privateKey, version: this.version });
   }
 
-  paymentParams = (params) => {
+  paymentParams = (params = {}) => {
     const data = {
       language: this.language,
       currency: this.currency,
@@ -20,7 +21,7 @@ class LiqPay {
     return this.api.apiParams(data);
   };
 
-  checkoutLink = (params) => {
+  checkoutLink = (params = {}) => {
     const prepareData = this.paymentParams(params);
     this.dataPrepare.validate('checkout', prepareData);
     const { data, signature } = this.api.paymentObject(prepareData);
@@ -28,7 +29,7 @@ class LiqPay {
     return `${this.api.host}3/checkout?data=${data}&signature=${signature}`;
   };
 
-  checkoutForm = (params) => {
+  checkoutForm = (params = {}) => {
     const language = params.language || this.language;
 
     const prepareData = this.paymentParams(params);
@@ -42,29 +43,49 @@ class LiqPay {
       '</form>';
   };
 
-  status = async (orderId) => {
-    const data = this.api.apiParams({
+  request = async (params = {}) => {
+    const data = this.api.apiParams(params);
+
+    this.dataPrepare.validate('request', data);
+
+    const payload = await this.api.api('request', data);
+    return payload;
+  };
+
+  status = async (orderId = '') => {
+    const order = this.request({
       action: 'status',
       order_id: orderId
     });
 
-    this.dataPrepare.validate('status', data);
-
-    const payload = await this.api.api(data);
-    return payload;
+    return order;
   };
 
-  refund = async (orderId, amount) => {
+  refund = async (orderId = '', amount = 0) => {
     const data = this.api.apiParams({
       action: 'refund',
       order_id: orderId,
       amount
     });
 
-    this.dataPrepare.validate('refund', data);
+    this.dataPrepare.validate('request', data);
 
-    const payload = await this.api.api(data);
-    return payload;
+    try {
+      const payload = await this.api.api('request', data);
+      return payload;
+    } catch (error) {
+      // Если ошибка в отсутствии оплаты с таким order_id, то пробросить дальше
+      if (error.details.err_code === 'payment_not_found') {
+        throw error;
+      }
+
+      // Добавить к делатям ошибки текущий статус и описание статуса и пробросить ошибку дальше
+      const order = await this.status(orderId);
+      order.status_description = payStatus[order.status];
+      error.details.order = order;
+
+      throw error;
+    }
   };
 }
 
