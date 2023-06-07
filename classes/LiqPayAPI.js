@@ -5,9 +5,10 @@ class LiqPayAPI {
   #publicKey;
   #privateKey;
   #host;
+  #version;
 
   constructor (options = {}) {
-    const { publicKey, privateKey } = options;
+    const { publicKey, privateKey, version } = options;
 
     if (!publicKey || !privateKey) {
       throw new LiqPayError('Public key and private key must be provided', { publicKey, privateKey }, 'LiqPayAPI.Constructor');
@@ -16,13 +17,15 @@ class LiqPayAPI {
     this.#publicKey = publicKey;
     this.#privateKey = privateKey;
     this.#host = 'https://www.liqpay.ua/api/';
+    this.#version = version;
   }
 
   get host () { return this.#host; }
 
-  paymetParams = (params) => {
+  apiParams = (params = {}) => {
     return {
       public_key: this.#publicKey,
+      version: this.#version,
       ...params
     };
   };
@@ -34,7 +37,7 @@ class LiqPayAPI {
   };
 
   async api (path, params) {
-    const prepareData = this.paymetParams(params);
+    const prepareData = this.apiParams(params);
     const { data, signature } = this.paymentObject(prepareData);
 
     const requestBody = `${encodeURIComponent('data')}=${encodeURIComponent(data)}&${encodeURIComponent('signature')}=${encodeURIComponent(signature)}`;
@@ -79,7 +82,7 @@ class LiqPayAPI {
         paramsCount: typeof params === 'object' ? Object.keys(params).length : 0
       }, 'LiqPayAPI.createSignature');
     }
-    const prepareData = this.paymetParams(params);
+    const prepareData = this.apiParams(params);
     const data = Buffer.from(JSON.stringify(prepareData)).toString('base64');
     return this.hashSignature(data);
   };

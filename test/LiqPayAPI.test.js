@@ -44,7 +44,7 @@ describe('LiqPayAPI', () => {
   });
 
   test('should create payment params correctly', () => {
-    const result = liqPay.paymetParams(params);
+    const result = liqPay.apiParams(params);
 
     expect(result).toEqual({
       version,

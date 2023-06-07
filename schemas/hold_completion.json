@@ -1,0 +1,16 @@
+{
+  "type": "object",
+    "required": ["action", "version", "public_key", "order_id", "amount"],
+      "properties": {
+    "action": { "type": "string", "enum": ["hold_completion"] },
+    "version": { "type": "integer" },
+    "public_key": { "type": "string" },
+    "order_id": {
+      "type": "string",
+        "minLength": 1,
+          "maxLength": 255
+    },
+    "amount": { "type": "number" }
+  }
+}
+
