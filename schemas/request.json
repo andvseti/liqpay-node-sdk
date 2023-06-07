@@ -2,7 +2,16 @@
   "type": "object",
   "required": ["action", "version", "public_key", "order_id"],
   "properties": {
-    "action": { "type": "string", "enum": ["refund", "hold_completion", "status"]},
+    "action": {
+      "type": "string",
+      "enum": [
+        "status",
+        "hold",
+        "hold_completion",
+        "pay",
+        "refund"
+      ]
+    },
     "version": { "type": "integer" },
     "public_key": { "type": "string" },
     "order_id": {
