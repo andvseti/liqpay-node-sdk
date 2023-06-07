@@ -1,6 +1,5 @@
 const LiqPayAPI = require('./LiqPayAPI');
 const LiqPayDataPreparer = require('./LiqPayDataPreparer');
-const payStatus = require('./paymentStatusesMap');
 
 class LiqPay {
   constructor (options = {}) {
@@ -59,26 +58,6 @@ class LiqPay {
     });
 
     return order;
-  };
-
-  refund = async (orderId = '', amount = 0) => {
-    try {
-      const payload = await this.request({ action: 'refund', order_id: orderId, amount });
-
-      return payload;
-    } catch (error) {
-      // Если ошибка в отсутствии оплаты с таким order_id, то пробросить дальше
-      if (error.details.err_code === 'payment_not_found') {
-        throw error;
-      }
-
-      // Добавить к делатям ошибки текущий статус и описание статуса и пробросить ошибку дальше
-      const order = await this.status(orderId);
-      order.status_description = payStatus[order.status];
-      error.details.order = order;
-
-      throw error;
-    }
   };
 }
 
