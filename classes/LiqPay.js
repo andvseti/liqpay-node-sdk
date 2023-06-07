@@ -59,6 +59,10 @@ class LiqPay {
 
     return order;
   };
+
+  callback = ({ data, signature }) => {
+    return this.api.verifySignature(data, signature);
+  };
 }
 
 module.exports = LiqPay;
