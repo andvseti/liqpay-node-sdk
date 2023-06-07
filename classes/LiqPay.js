@@ -62,16 +62,9 @@ class LiqPay {
   };
 
   refund = async (orderId = '', amount = 0) => {
-    const data = this.api.apiParams({
-      action: 'refund',
-      order_id: orderId,
-      amount
-    });
-
-    this.dataPrepare.validate('request', data);
-
     try {
-      const payload = await this.api.api('request', data);
+      const payload = await this.request({ action: 'refund', order_id: orderId, amount });
+
       return payload;
     } catch (error) {
       // Если ошибка в отсутствии оплаты с таким order_id, то пробросить дальше
