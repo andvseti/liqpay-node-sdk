@@ -41,11 +41,12 @@ class LiqPayDataPreparer {
 
     const valid = validate(data);
 
-    if (!valid) {
-      throw new LiqPayError(validate.errors.message, validate.errors, 'LiqPayDataPreparer.validate');
+    if (!valid) { // на время доработки схем и отладки ошибку не выбрасывать
+      // throw new LiqPayError(validate.errors.message, validate.errors, 'LiqPayDataPreparer.validate');
+      console.warn(validate.errors);
     }
 
-    return true;
+    return valid;
   }
 
   schemaLoader (schemasDir) {

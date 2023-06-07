@@ -1,25 +1,24 @@
 {
   "type": "object",
-  "required": ["action", "version", "public_key", "order_id"],
-  "properties": {
-    "action": {
-      "type": "string",
-      "enum": [
-        "status",
-        "hold",
-        "hold_completion",
-        "pay",
-        "refund"
-      ]
+  "oneOf": [
+    {
+      "properties": {
+        "action": { "enum": ["status"] },
+        "version": { "type": "integer" },
+        "public_key": { "type": "string" },
+        "order_id": { "type": "string", "minLength": 1, "maxLength": 255 }
+      },
+      "required": ["action", "version", "public_key", "order_id"]
     },
-    "version": { "type": "integer" },
-    "public_key": { "type": "string" },
-    "order_id": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 255
-    },
-    "amount": { "type": "number" }
-  }
+    {
+      "properties": {
+        "action": { "enum": ["hold", "hold_completion", "pay", "refund"] },
+        "version": { "type": "integer" },
+        "public_key": { "type": "string" },
+        "order_id": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "amount": { "type": "number" }
+      },
+      "required": ["action", "version", "public_key", "order_id", "amount"]
+    }
+  ]
 }
-
