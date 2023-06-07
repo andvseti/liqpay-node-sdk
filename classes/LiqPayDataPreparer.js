@@ -32,10 +32,13 @@ class LiqPayDataPreparer {
   validate (schemaName, data) {
     const validate = this.#compileSchema[schemaName];
 
-    if (!validate) {
-      console.warn(`Schema ${schemaName} not found`);
-      return false;
+    // Если в схему request еще не добавил нужные поля для данного action, пропускаем валидацию.
+    // Если схема не реализована, пропускаем валидацию
+    const actionInSchema = this.schemasJSON[schemaName]?.properties?.action?.enum?.includes(data.action);
+    if (!validate || (schemaName === 'request' && !actionInSchema)) {
+      return true;
     }
+
     const valid = validate(data);
 
     if (!valid) {
