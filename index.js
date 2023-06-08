@@ -1,7 +1,7 @@
 const LiqPay = require('./classes/LiqPay');
 const LiqPayAPI = require('./classes/LiqPayAPI');
 const LiqPayDataPreparer = require('./classes/LiqPayDataPreparer');
-const paymentStatusesMap = require('./classes/paymentStatusesMap');
+const paymentStatusesMap = require('./paymentStatusesMap');
 
 module.exports = (options = {}) => new LiqPay(options);
 module.exports.LiqPay = LiqPay;
