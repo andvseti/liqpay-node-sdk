@@ -51,7 +51,7 @@
       },
       "paytypes": {
         "type": "string",
-        "enum": ["apay", "gpay", "card", "liqpay", "privat24", "moment_part", "paypart", "cash", "invoice", "qr"]
+        "pattern": "/^(apay|gpay|card|liqpay|privat24|moment_part|paypart|cash|invoice|qr)(,\\s?(apay|gpay|card|liqpay|privat24|moment_part|paypart|cash|invoice|qr))*$/gm"
       },
       "result_url": {
         "type": "string",
